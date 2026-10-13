@@ -1,0 +1,126 @@
+html,
+body {
+  background: #519385;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+
+#instrument {
+  position: relative;
+  aspect-ratio: 1280 / 832;
+}
+
+.artwork {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.control {
+  position: absolute;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: transparent;
+  touch-action: manipulation;
+}
+
+.slider {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.slider::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 100%;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 9%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: url("../img/interface/scale- circle.svg") center/contain no-repeat;
+  margin-top: 1.5%;
+}
+
+.slider::-moz-range-thumb {
+  width: 32px;
+  height: 32px;
+  background: #000;
+  border: 0;
+  border-radius: 50%;
+}
+
+.knob {
+  border-radius: 50%;
+  touch-action: none;
+}
+
+.knob .dot {
+  position: absolute;
+  width: 23%;
+  height: 23%;
+  background: url("../img/interface/black- circle-for- circle.svg") center/contain no-repeat;
+  border-radius: 50%;
+  left: 38.5%;
+  top: 38.5%;
+  transform: rotate(var(--angle)) translateY(-125%);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.slider {
+  background: url("../img/interface/scale-strip.svg") center/100% 100% no-repeat;
+  padding: 5px 16px;
+}
+
+.slider::-webkit-slider-thumb {
+  margin-top: 0;
+  width: 10%;
+}
+
+.knob {
+  border: 0;
+}
+
+.control:focus {
+  outline: none;
+}
+
+.launch-art {
+  transition: filter 0.25s ease;
+}
+
+.button-art {
+  transition: filter 0.25s ease;
+}
+
+#instrument:has(.play:active) #launch-right-art,
+#instrument:has(.note:active) #launch-left-art,
+#instrument:has(button[aria-label="Stop — остановить оба голоса"]:active) #stop-art,
+#instrument:has(.wave[aria-label="Star Melody: sine"]:active) #wave-a-sine-art,
+#instrument:has(.wave[aria-label="Star Melody: pulse"]:active) #wave-a-pulse-art,
+#instrument:has(.wave[aria-label="Bubble Bass: square"]:active) #wave-b-square-art,
+#instrument:has(.wave[aria-label="Bubble Bass: triangle"]:active) #wave-b-triangle-art {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55))
+    drop-shadow(0 0 22px rgba(255, 255, 255, 0.25));
+}
