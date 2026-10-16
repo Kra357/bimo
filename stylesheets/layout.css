@@ -20,6 +20,9 @@ body {
   height: 100%;
   pointer-events: none;
   user-select: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
 .control {
@@ -36,9 +39,10 @@ body {
 .slider {
   appearance: none;
   -webkit-appearance: none;
-  background: transparent;
+  background: url("../img/interface/scale-strip.svg") center/100% 100% no-repeat;
   cursor: ew-resize;
   touch-action: none;
+  padding: 5px 16px;
 }
 
 .slider::-webkit-slider-runnable-track {
@@ -49,11 +53,11 @@ body {
 .slider::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
-  width: 9%;
+  width: 10%;
   aspect-ratio: 1;
   border-radius: 50%;
   background: url("../img/interface/scale- circle.svg") center/contain no-repeat;
-  margin-top: 1.5%;
+  margin-top: 0;
 }
 
 .slider::-moz-range-thumb {
@@ -67,6 +71,7 @@ body {
 .knob {
   border-radius: 50%;
   touch-action: none;
+  border: 0;
 }
 
 .knob .dot {
@@ -88,20 +93,6 @@ body {
   clip-path: inset(50%);
 }
 
-.slider {
-  background: url("../img/interface/scale-strip.svg") center/100% 100% no-repeat;
-  padding: 5px 16px;
-}
-
-.slider::-webkit-slider-thumb {
-  margin-top: 0;
-  width: 10%;
-}
-
-.knob {
-  border: 0;
-}
-
 .control:focus {
   outline: none;
 }
@@ -114,13 +105,377 @@ body {
   transition: filter 0.25s ease;
 }
 
-#instrument:has(.play:active) #launch-right-art,
-#instrument:has(.note:active) #launch-left-art,
-#instrument:has(button[aria-label="Stop — остановить оба голоса"]:active) #stop-art,
-#instrument:has(.wave[aria-label="Star Melody: sine"]:active) #wave-a-sine-art,
-#instrument:has(.wave[aria-label="Star Melody: pulse"]:active) #wave-a-pulse-art,
-#instrument:has(.wave[aria-label="Bubble Bass: square"]:active) #wave-b-square-art,
-#instrument:has(.wave[aria-label="Bubble Bass: triangle"]:active) #wave-b-triangle-art {
+.launch-art.is-on,
+.button-art.is-on,
+#instrument:has(button[aria-label="Stop — остановить оба голоса"]:active) #stop-art {
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55))
     drop-shadow(0 0 22px rgba(255, 255, 255, 0.25));
+}
+
+/* Изображения макета. Позиции заданы относительно сцены 1280 × 832. */
+
+.art-image {
+  position: absolute;
+}
+.art-bmo-on-the-left-1 {
+  left: 1.7969%;
+  top: 43.0288%;
+  width: 10.0781%;
+  height: 38.7019%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-bmo-on-the-right-1 {
+  left: 96.4844%;
+  top: 48.0769%;
+  width: 10.0781%;
+  height: 38.7019%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-poits-1 {
+  left: 2.3438%;
+  top: 19.4712%;
+  width: 9.2188%;
+  height: 19.4712%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-poits-2 {
+  left: 88.8281%;
+  top: 17.5481%;
+  width: 9.2188%;
+  height: 19.4712%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-body-1 {
+  left: 13.5156%;
+  top: 0%;
+  width: 73.2812%;
+  height: 100%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-face-screen-1 {
+  left: 19.8438%;
+  top: 3.8462%;
+  width: 60.3125%;
+  height: 27.8846%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-left-hand-1 {
+  left: 5.7031%;
+  top: 37.9808%;
+  width: 12.6562%;
+  height: 38.4615%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-rignt-hand-1 {
+  left: 82.1875%;
+  top: 34.375%;
+  width: 12.6562%;
+  height: 38.4615%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-attack-1 {
+  left: 18.9844%;
+  top: 34.4952%;
+  width: 5.9375%;
+  height: 3.2452%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-sustain-1 {
+  left: 18.9844%;
+  top: 47.1154%;
+  width: 6.5625%;
+  height: 3.2452%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-attack-2 {
+  left: 51.0938%;
+  top: 69.7115%;
+  width: 6.0156%;
+  height: 3.2452%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-relaese-1 {
+  left: 51.0938%;
+  top: 82.9327%;
+  width: 6.4062%;
+  height: 3.726%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-wave-type-1 {
+  left: 21.25%;
+  top: 78.726%;
+  width: 9.6094%;
+  height: 4.8077%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-wave-type-2 {
+  left: 53.6719%;
+  top: 34.7356%;
+  width: 8.9844%;
+  height: 4.6875%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-sine-1 {
+  left: 18.3594%;
+  top: 90.024%;
+  width: 4.5312%;
+  height: 3.4856%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-pulse-1 {
+  left: 28.9844%;
+  top: 90.1442%;
+  width: 5.0781%;
+  height: 3.3654%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-square-1 {
+  left: 54.375%;
+  top: 45.7933%;
+  width: 6.875%;
+  height: 3.4856%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-triangle-1 {
+  left: 54.0625%;
+  top: 57.6923%;
+  width: 7.5%;
+  height: 4.4471%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-delay-1 {
+  left: 34.8438%;
+  top: 60.2163%;
+  width: 5.3906%;
+  height: 3.726%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-chorus-1 {
+  left: 38.6719%;
+  top: 83.5337%;
+  width: 6.0938%;
+  height: 3.4856%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-delay-2 {
+  left: 66.0156%;
+  top: 64.7837%;
+  width: 5.5469%;
+  height: 3.8462%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-chorus-2 {
+  left: 75.1562%;
+  top: 56.851%;
+  width: 6.5625%;
+  height: 3.4856%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-stop-1 {
+  left: 75.8594%;
+  top: 35.8173%;
+  width: 4.7656%;
+  height: 4.2067%;
+  object-fit: contain;
+  object-position: left top;
+}
+.art-blue-button-1 {
+  left: 18.125%;
+  top: 85.4567%;
+  width: 6.0156%;
+  height: 2.7644%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-blue-button-2 {
+  left: 28.125%;
+  top: 85.4567%;
+  width: 6.0156%;
+  height: 2.7644%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-blue-button-3 {
+  left: 54.8438%;
+  top: 41.9471%;
+  width: 6.0156%;
+  height: 2.7644%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-blue-button-4 {
+  left: 54.6094%;
+  top: 53.726%;
+  width: 6.0156%;
+  height: 2.7644%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-light-blue-triangle-1 {
+  left: 65.5469%;
+  top: 38.101%;
+  width: 7.9688%;
+  height: 12.2596%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-circle-blue-1 {
+  left: 76.9531%;
+  top: 40.3846%;
+  width: 3.5156%;
+  height: 5.1683%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-circle-pink-1 {
+  left: 32.2656%;
+  top: 62.7404%;
+  width: 9.2188%;
+  height: 13.5817%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-circle-pink-2 {
+  left: 63.75%;
+  top: 52.7644%;
+  width: 9.2188%;
+  height: 13.5817%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-circle-green-1 {
+  left: 39.0625%;
+  top: 75%;
+  width: 6.4062%;
+  height: 8.8942%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-circle-green-2 {
+  left: 75.2344%;
+  top: 48.3173%;
+  width: 6.4062%;
+  height: 8.8942%;
+  object-fit: fill;
+  object-position: left top;
+}
+.art-yellow-1 {
+  left: 19.2188%;
+  top: 60.4567%;
+  width: 10%;
+  height: 15.1442%;
+  object-fit: contain;
+  object-position: center;
+}
+.a-attack {
+  left: 18.9062%;
+  top: 39.4231%;
+  width: 30.1562%;
+  height: 5.649%;
+}
+.a-sustain {
+  left: 18.9062%;
+  top: 50.9615%;
+  width: 30.1562%;
+  height: 5.649%;
+}
+.a-sine {
+  left: 18.125%;
+  top: 85.6971%;
+  width: 5.9375%;
+  height: 2.524%;
+}
+.a-pulse {
+  left: 28.125%;
+  top: 85.6971%;
+  width: 5.9375%;
+  height: 2.524%;
+}
+.a-delay {
+  left: 34.2188%;
+  top: 64.9038%;
+  width: 6.0938%;
+  height: 9.375%;
+}
+.a-chorus {
+  left: 39.7656%;
+  top: 75.8413%;
+  width: 4.8438%;
+  height: 7.4519%;
+}
+.launch-left {
+  left: 19.5312%;
+  top: 60.8173%;
+  width: 9.375%;
+  height: 14.4231%;
+}
+.b-attack {
+  left: 50.7812%;
+  top: 74.8798%;
+  width: 30.1562%;
+  height: 5.649%;
+}
+.b-release {
+  left: 50.7812%;
+  top: 87.6202%;
+  width: 30.1562%;
+  height: 5.649%;
+}
+.b-square {
+  left: 54.9219%;
+  top: 42.1875%;
+  width: 5.9375%;
+  height: 2.524%;
+}
+.b-triangle {
+  left: 54.6094%;
+  top: 53.9663%;
+  width: 5.9375%;
+  height: 2.524%;
+}
+.b-delay {
+  left: 65.7031%;
+  top: 54.9279%;
+  width: 6.0938%;
+  height: 9.375%;
+}
+.b-chorus {
+  left: 76.0156%;
+  top: 49.1587%;
+  width: 4.8438%;
+  height: 7.4519%;
+}
+.launch-right {
+  left: 66.5625%;
+  top: 39.1827%;
+  width: 6.25%;
+  height: 8.1731%;
+}
+.stop-button {
+  left: 77.1094%;
+  top: 40.5048%;
+  width: 3.2812%;
+  height: 5.0481%;
 }

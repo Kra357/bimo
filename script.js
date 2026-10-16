@@ -1,4 +1,6 @@
 "use strict";
+
+// Начальные настройки левого и правого голоса.
 const state = {
   a: {
     attack: 0.05,
@@ -29,30 +31,10 @@ let engine = null,
   generation = 0;
 const active = { a: false, b: false },
   pending = { a: null, b: null };
-const host = document.querySelector("#controls");
 const setStatus = (text) => {
   document.querySelector("#live").textContent = text;
 };
-function place(el, x, y, w, h) {
-  el.classList.add("control");
-  Object.assign(el.style, {
-    left: `${x / 12.8}%`,
-    top: `${y / 8.32}%`,
-    width: `${w / 12.8}%`,
-    height: `${h / 8.32}%`,
-  });
-  host.append(el);
-  return el;
-}
-function button(label, x, y, w, h, fn, cls = "") {
-  const el = document.createElement("button");
-  el.type = "button";
-  el.title = label;
-  el.setAttribute("aria-label", label);
-  el.className = cls;
-  el.addEventListener("click", fn);
-  return place(el, x, y, w, h);
-}
+// Изменение параметров синтезатора и эффектов.
 function apply(voice, key, value) {
   state[voice][key] = value;
   if (!engine) return;
@@ -67,60 +49,40 @@ function apply(voice, key, value) {
   else if (key === "distortion") v.distortion.distortion = value;
   else v[key].wet.rampTo(value, 0.04);
 }
-function slider(voice, key, x, y, w, h, max) {
-  const el = document.createElement("input");
-  el.type = "range";
-  el.min = 0;
-  el.max = max;
-  el.step = 0.001;
+// Подключение ползунков, уже размеченных в index.html.
+function setupSlider(el) {
+  const voice = el.dataset.voice;
+  const key = el.dataset.param;
   el.value = state[voice][key];
-  el.className = "slider";
   el.setAttribute("aria-label", `${voice === "a" ? "Star Melody" : "Bubble Bass"} ${key}`);
   el.title = el.getAttribute("aria-label");
   el.oninput = () => {
     apply(voice, key, +el.value);
     el.title = `${key}: ${(+el.value).toFixed(2)}`;
   };
-  place(el, x, y, w, h);
 }
-slider("a", "attack", 242, 328, 386, 47, 2);
-slider("a", "sustain", 242, 424, 386, 47, 1);
-slider("b", "attack", 650, 623, 386, 47, 2);
-slider("b", "release", 650, 729, 386, 47, 3);
+document.querySelectorAll(".slider").forEach(setupSlider);
+
 const waves = [];
-function wave(voice, type, x, y) {
-  const el = button(
-    `${voice === "a" ? "Star Melody" : "Bubble Bass"}: ${type}`,
-    x,
-    y,
-    76,
-    21,
-    () => {
-      apply(voice, "wave", type);
-      waves
-        .filter((w) => w.voice === voice)
-        .forEach((w) => {
-          w.el.setAttribute("aria-pressed", String(w.type === type));
-        });
-    },
-    "wave",
-  );
-  el.setAttribute("aria-pressed", String(state[voice].wave === type));
+const selectedWave = { a: null, b: null };
+const defaultWave = { a: "sine", b: "triangle" };
+// Выбор формы волны не запускает и не останавливает партию.
+function setupWaveButton(el) {
+  const voice = el.dataset.voice;
+  const type = el.dataset.wave;
+  el.addEventListener("click", () => {
+    selectedWave[voice] = selectedWave[voice] === type ? null : type;
+    apply(voice, "wave", selectedWave[voice] || defaultWave[voice]);
+    syncButtons();
+  });
   waves.push({ el, voice, type });
 }
-wave("a", "sine", 232, 713);
-wave("a", "pulse", 360, 713);
-wave("b", "square", 703, 351);
-wave("b", "triangle", 699, 449);
-function knob(voice, key, x, y, size) {
-  const el = document.createElement("div");
-  el.className = "knob";
-  el.tabIndex = 0;
-  el.role = "slider";
-  el.setAttribute("aria-label", `${voice === "a" ? "Star Melody" : "Bubble Bass"} ${key}`);
-  el.setAttribute("aria-valuemin", "0");
-  el.setAttribute("aria-valuemax", "100");
-  el.innerHTML = '<span class="dot"></span>';
+document.querySelectorAll(".wave").forEach(setupWaveButton);
+
+// Круглые регуляторы: перетаскивание мышью или стрелки клавиатуры.
+function setupKnob(el) {
+  const voice = el.dataset.voice;
+  const key = el.dataset.param;
   const update = (v) => {
     apply(voice, key, Math.max(0, Math.min(1, v)));
     el.style.setProperty("--angle", `${-135 + state[voice][key] * 270}deg`);
@@ -148,34 +110,51 @@ function knob(voice, key, x, y, size) {
       );
     }
   };
-  place(el, x, y, size, size);
   update(state[voice][key]);
 }
-knob("a", "delay", 438, 540, 78);
-knob("a", "chorus", 509, 631, 62);
-knob("b", "delay", 841, 457, 78);
-knob("b", "chorus", 973, 409, 62);
-const playButton = button(
-  "Треугольник — запустить правый голос",
-  852,
-  326,
-  80,
-  68,
-  () => startVoice("b"),
-  "play",
-);
-const plusButton = button(
-  "Плюс — запустить левый голос",
-  250,
-  506,
-  120,
-  120,
-  () => startVoice("a"),
-  "note",
-);
-playButton.setAttribute("aria-pressed", "false");
-plusButton.setAttribute("aria-pressed", "false");
-const stopButton = button("Stop — остановить оба голоса", 987, 337, 42, 42, stop);
+document.querySelectorAll(".knob").forEach(setupKnob);
+
+// Кнопки уже находятся в HTML; здесь подключаем только их действия.
+const playButton = document.querySelector("#launch-right");
+const plusButton = document.querySelector("#launch-left");
+const stopButton = document.querySelector("#stop-button");
+playButton.addEventListener("click", () => toggleVoice("b"));
+plusButton.addEventListener("click", () => toggleVoice("a"));
+stopButton.addEventListener("click", stop);
+
+// Подсветка отражает реальную активность голоса и выбранной формы волны.
+function syncButtons() {
+  playButton.setAttribute("aria-pressed", String(active.b));
+  plusButton.setAttribute("aria-pressed", String(active.a));
+  document.querySelector("#launch-left-art").classList.toggle("is-on", active.a);
+  document.querySelector("#launch-right-art").classList.toggle("is-on", active.b);
+  for (const { el, voice, type } of waves) {
+    const on = selectedWave[voice] === type;
+    el.setAttribute("aria-pressed", String(on));
+    document.querySelector(`#wave-${voice}-${type}-art`).classList.toggle("is-on", on);
+  }
+}
+
+function toggleVoice(voice) {
+  if (active[voice] || pending[voice] !== null) stopVoice(voice);
+  else startVoice(voice);
+}
+
+function stopVoice(voice) {
+  pending[voice] = null;
+  active[voice] = false;
+  if (engine) {
+    engine[voice].synth.triggerRelease();
+    // Gain после эффектов гасит также хвосты Delay и Chorus только этой стороны.
+    engine[voice].gain.gain.cancelScheduledValues(Tone.now());
+    engine[voice].gain.gain.rampTo(0, 0.08);
+  }
+  if (!active.a && !active.b && pending.a === null && pending.b === null) stop();
+  else {
+    syncButtons();
+    setStatus(active.a ? "Играет левый голос" : active.b ? "Играет правый голос" : "Запуск");
+  }
+}
 
 // Создаём аудиоцепочки и музыкальные партии один раз.
 function createEngine() {
@@ -291,14 +270,17 @@ async function loadRecording(e) {
 // Запуск только выбранной стороны, без дублирования циклов.
 async function startVoice(voice) {
   if (active[voice] || pending[voice] !== null) return;
-  const token = generation;
+  const epoch = generation;
+  const token = Symbol("voice-start");
   pending[voice] = token;
   try {
     if (!window.Tone) throw new Error("Не загрузился vendor/Tone.js");
     await Tone.start();
-    if (token !== generation) return;
+    if (epoch !== generation || pending[voice] !== token) return;
     const e = engine || createEngine();
     active[voice] = true;
+    e[voice].gain.gain.cancelScheduledValues(Tone.now());
+    e[voice].gain.gain.rampTo(state[voice].volume, 0.04);
     if (!playing) {
       playing = true;
       e.gate.gain.cancelScheduledValues(Tone.now());
@@ -310,8 +292,7 @@ async function startVoice(voice) {
           if (playing && engine === e && e.player && e.player.state !== "started") e.player.start();
         });
     }
-    playButton.setAttribute("aria-pressed", String(active.b));
-    plusButton.setAttribute("aria-pressed", String(active.a));
+    syncButtons();
 
     setStatus(
       active.a && active.b
@@ -336,8 +317,7 @@ function stop() {
   pending.a = null;
   pending.b = null;
 
-  playButton.setAttribute("aria-pressed", "false");
-  plusButton.setAttribute("aria-pressed", "false");
+  syncButtons();
   if (engine) {
     Tone.Transport.stop();
     Tone.Transport.position = 0;
