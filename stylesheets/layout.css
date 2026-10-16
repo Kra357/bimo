@@ -22,7 +22,7 @@ body {
   user-select: none;
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .control {
