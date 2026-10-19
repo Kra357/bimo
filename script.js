@@ -16,7 +16,7 @@ const state = {
     attack: 0.01,
     sustain: 0.5,
     release: 0.25,
-    volume: 0.22,
+    volume: 0.36,
     pan: 0.5,
     distortion: 0.15,
     filter: 1400,
@@ -188,7 +188,9 @@ function createEngine() {
         release: state.b.release,
       },
     }),
-    distortion: new Tone.Distortion(state.b.distortion),
+    // Смешиваем искажение с исходным сигналом: полностью обработанный
+    // тихий треугольный бас терял уровень на выходе Waveshaper.
+    distortion: new Tone.Distortion({ distortion: state.b.distortion, wet: 0.15 }),
     filter: new Tone.Filter(state.b.filter, "lowpass"),
     chorus: new Tone.Chorus(1.5, 2, 0.3).start(),
     delay: new Tone.FeedbackDelay("8n", 0.15),
@@ -241,7 +243,8 @@ function createEngine() {
   ).start(0);
   const seqB = new Tone.Sequence(
     (time, note) => {
-      if (active.b && note) b.synth.triggerAttackRelease(note, "16n", time, 0.8);
+      // Бас должен успеть прозвучать до отпускания огибающей.
+      if (active.b && note) b.synth.triggerAttackRelease(note, "8n", time, 0.8);
     },
     bass,
     "8n",
